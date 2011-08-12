@@ -8,7 +8,6 @@ $bannedips[]="0.0.0.0";
 /*** DEFAULT PAGE ***/
 if (empty($_GET['output'])) 
 {
-	
 	require_once("includes/default.php");
 	$smarty->display('index.tpl');
 	exit();
@@ -50,6 +49,12 @@ $outputversion = GetOutputVersion(); 	// Output version
 $type=GetItemType();					// Item Type
 $slots=GetSlots();						// Item Slots
 $max = GetMaxResults();					// Maximum results to return
+
+// Version check
+if ($output=="json" && $outputversion<1.2)
+{
+	error("json output is only available for output version 1.2 and later");
+}
 
 $db=connect_to_db($CONFIG);
 if (CONNECTED === false) 
