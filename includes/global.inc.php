@@ -6,6 +6,7 @@ if (!INSIDE_CMS)
 }
 
 require_once('config.php');
+require_once('includes/functions.php');
 
 define('REAL_MAX', $CONFIG['real_max']);
 define('DEFAULT_MAX', $CONFIG['default_max']);
