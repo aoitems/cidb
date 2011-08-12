@@ -1,30 +1,49 @@
 <?php
+if (!INSIDE_CMS)
+{
+	header("location: /");
+	return;
+}
+
 require_once('config.php');
+
+define('REAL_MAX', $CONFIG['real_max']);
+define('DEFAULT_MAX', $CONFIG['default_max']);
 
 // Version Information
 define('SERVER', $CONFIG['server']);
 
 // Database Connection
-function connect_to_db($config) 
+function connect_to_db($config)
 {
-	$db = @mysql_pconnect($config["host"], $config["user"], $config["password"]);
-	if (mysql_errno() > 0) 
+	$db = new mysqli($config["host"], $config["user"], $config["password"]);
+	if ($db->connect_errno > 0)
 	{
 		define('CONNECTED', false);
-	} 
-	else 
+	}
+	else
 	{
-		@mysql_select_db($config["database"], $db);
-		if (mysql_errno() > 0) 
+		$db->select_db($config["database"]);
+		if (mysql_errno() > 0)
 		{
 			define('CONNECTED', false);
-		} 
-		else {
+		}
+		else
+		{
 			define('CONNECTED', true);
 		}
 	}
 	// Fetch metadata
-	$metadata = mysql_fetch_array(mysql_query("SELECT * FROM metadata ORDER BY time DESC LIMIT 1", $db),MYSQL_ASSOC);
+	if (!xcache_isset("metadata"))
+	{
+		$q = $sql->query("SELECT * FROM metadata ORDER BY time DESC LIMIT 1");
+		$metadata = $q->fetch_assoc();
+		xcache_set("metadata", gzdeflate(serialize($metadata), 3), 300);
+	}
+	else
+	{
+		$metadata = unserialize(gzinflate(xcache_get("metadata")));
+	}
 	define('VERSION', $metadata["version"]);
 	define('SOURCE', $metadata["source"]);
 	define('UPDATED', $metadata["time"]);
@@ -51,7 +70,7 @@ $smarty->allow_php_tag=true;
 
 
 // Error Output
-function error($message) 
+function error($message)
 {
 	global $smarty;
 	$smarty->assign('message', $message);
@@ -59,16 +78,15 @@ function error($message)
 	exit();
 }
 
-function send_cache_headers($seconds_to_cache, $public=true) 
+function send_cache_headers($seconds_to_cache, $public=true)
 {
 	$ts = gmdate("D, d M Y H:i:s", (time() + $seconds_to_cache)) . " GMT";
 	header("Expires: $ts");
 	header("Pragma: cache");
 	if ($public)
-		$cc="public";
+	$cc="public";
 	else
-		$cc="private";
+	$cc="private";
 	header("Cache-Control: $cc, maxage=$seconds_to_cache");
 }
-
 ?>
