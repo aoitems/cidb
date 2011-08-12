@@ -81,7 +81,7 @@ if ($type !== false)
 else 
 {
 	// Exclude implants by default
-	$sql.=" AND (t2.type!='implant' OR (t2.itemtype=='implant' && t2.name NOT LIKE '%implant%')) ";
+	$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype=='implant' && t2.name NOT LIKE '%implant%')) ";
 }
 
 if (is_array($slots) && count($slots)>0) 
