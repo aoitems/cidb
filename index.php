@@ -73,6 +73,7 @@ if ($ql > 0)
 {
 	$sql .= ' AND ((t2.ql <= '.$ql.' AND t3.ql >= '.$ql.') OR (t2.ql >= '.$ql.' AND t3.ql <= '.$ql.')) ';
 }
+
 if ($type !== false) 
 {
 	$sql .= " AND t2.itemtype='".$db->real_escape_string($type)."' ";	
@@ -80,7 +81,7 @@ if ($type !== false)
 else 
 {
 	// Exclude implants by default
-	$sql.=" AND t2.itemtype!='implant' ";
+	$sql.=" AND (t2.type!='implant' OR (t2.itemtype=='implant' && t2.name NOT LIKE '%implant%')) ";
 }
 
 if (is_array($slots) && count($slots)>0) 
