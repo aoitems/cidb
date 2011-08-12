@@ -23,9 +23,14 @@ function GetOutputVersion()
 	if (!empty($_GET['version']))
 	{
 		$outputversion = round($_GET['version'],1);
-		if ($_GET['version']<1.1 || $_GET['version']>1.2)
+		switch ($outputversion)
 		{
-			error('Unsupported version. I support versions: 1.1, 1.2');
+			case 1.1:
+			case 1.2:
+				break;
+			default:
+				error('Unsupported version. I support versions: 1.1, 1.2');
+				break;
 		}
 	}
 	return $outputversion;
