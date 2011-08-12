@@ -7,12 +7,12 @@
 	
 	<body>
 		<ul>
-			<li>Server: {$server|escape:'html'}</li>
-			<li>Search: {$outputversion|escape:'html'} (QL {$ql|escape:'html'})</li>
+			<li>Server: <a href="{$server|escape:'html'}">{$server|escape:'html'}</a></li>
+			<li>Search: {$search|escape:'html'}{if $ql>0} (QL {$ql|escape:'html'}){/if}</li>
 			<li>Source: {$version|escape:'html'} ({$source|escape:'html'})</li>
 			<li>Results: {$results_count|escape:'html'} (max: {$max|escape:'html'})</li>
 		</ul>
-		<br /><br />
+		
 		{foreach from=$results item=result}
 			<a href="http://www.xyphos.com/ao/aodb.php?id={$result.HighID|escape:'html'}{if $ql>0}&amp;ql={$ql|escape:'html'}{/if}" target="_blank">{$result.Name|escape:'html'}</a><br />
 		{/foreach}
