@@ -1,6 +1,7 @@
-VhaBot - Central Items Database is made available under the MIT License.
+BotSharp CIDB is made available under the MIT licence.
+Copyright (c) 2011 Demoder <demoder@demoder.me>
 
-Copyright (c) 2009 Remco van Oosterhout
+Based on the original work by Remco van Oosterhout on VhaBot CIDB (http://www.vhabot.net/downloads.php)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
