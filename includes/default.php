@@ -16,7 +16,8 @@ $smarty->assign("relations", number_format(RELATIONS,0,".",","));
 /*	Find top bots, by requests */
 $sql="select sum(hits) as hits from log WHERE bot!='example'";
 $totalhits = $db->query($sql);
-$totalhits = $totalhists->fetch_assoc();
+
+$totalhits = $totalhits->fetch_assoc();
 $onepercent = $totalhits["hits"]/100;
 
 if (! xcache_isset("topbots")) 
