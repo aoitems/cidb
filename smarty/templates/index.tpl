@@ -84,7 +84,7 @@
 							<a href="/?bot=example&amp;output=aoml&amp;search=combined%20foot&amp;version=1.2">aoml</a>,
 							<a href="/?bot=example&amp;output=xml&amp;search=combined%20foot&amp;version=1.2">xml</a>, 
 							<a href="/?bot=example&amp;output=json&amp;search=combined%20foot&amp;version=1.2">json</a>,
-							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">txt</a>
+							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">txt</a>, 
 							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">html</a>
 					</td>
 				</tr>
