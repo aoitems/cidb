@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="utf-8"> 
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Bot# CIDB</title>
@@ -85,6 +85,7 @@
 							<a href="/?bot=example&amp;output=xml&amp;search=combined%20foot&amp;version=1.2">xml</a>, 
 							<a href="/?bot=example&amp;output=json&amp;search=combined%20foot&amp;version=1.2">json</a>,
 							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">txt</a>
+							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">html</a>
 					</td>
 				</tr>
 			</tbody>

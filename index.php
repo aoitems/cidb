@@ -51,9 +51,9 @@ $slots=GetSlots();						// Item Slots
 $max = GetMaxResults();					// Maximum results to return
 
 // Version check
-if ($output=="json" && $outputversion<1.2)
+if (($output=="json" || $output=='html') && $outputversion<1.2)
 {
-	error("json output is only available for output version 1.2 and later");
+	error($output." is only available for version 1.2 and later");
 }
 
 $db=connect_to_db($CONFIG);
