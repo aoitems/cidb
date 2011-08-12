@@ -57,20 +57,20 @@ if (CONNECTED === false)
 	die("Error: Couldn't connect to database");
 }
 // Log request
-$db->query("INSERT INTO `log` (ip, bot, hits) VALUES ('".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."', '".mysql_real_escape_string($bot)."', 1) ON DUPLICATE KEY UPDATE hits = hits + 1");
+$db->query("INSERT INTO `log` (ip, bot, hits) VALUES ('".$db->real_escape_string($_SERVER['REMOTE_ADDR'])."', '".$db->real_escape_string($bot)."', 1) ON DUPLICATE KEY UPDATE hits = hits + 1");
 
 
 /*** SEARCH DATABASE ***/
 $sql =	"SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos ".
 		"FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ".
-		"WHERE t2.name LIKE '%".mysql_real_escape_string(str_replace(' ', '%', $search), $db)."%' ";
+		"WHERE t2.name LIKE '%".$db->real_escape_string(str_replace(' ', '%', $search))."%' ";
 if ($ql > 0) 
 {
 	$sql .= ' AND ((t2.ql <= '.$ql.' AND t3.ql >= '.$ql.') OR (t2.ql >= '.$ql.' AND t3.ql <= '.$ql.')) ';
 }
 if ($type !== false) 
 {
-	$sql .= " AND t2.itemtype='".mysql_real_escape_string($type, $db)."' ";	
+	$sql .= " AND t2.itemtype='".$db->real_escape_string($type)."' ";	
 }
 else 
 {
@@ -88,7 +88,7 @@ if (is_array($slots) && count($slots)>0)
 		{
 			$sql.=" OR";
 		}
-		$sql.= " t2.slot LIKE '%".mysql_real_escape_string($slot, $db)."%' ";
+		$sql.= " t2.slot LIKE '%".$db->real_escape_string($slot)."%' ";
 		$set=true;
 	}
 	$sql.=") ";
