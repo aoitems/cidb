@@ -36,7 +36,7 @@ function connect_to_db($config)
 	// Fetch metadata
 	if (!xcache_isset("metadata"))
 	{
-		$q = $sql->query("SELECT * FROM metadata ORDER BY time DESC LIMIT 1");
+		$q = $db->query("SELECT * FROM metadata ORDER BY time DESC LIMIT 1");
 		$metadata = $q->fetch_assoc();
 		xcache_set("metadata", gzdeflate(serialize($metadata), 3), 300);
 	}
