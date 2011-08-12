@@ -1,0 +1,12 @@
+<?php
+// Configuration
+$CONFIG['host'] = 'localhost';
+$CONFIG['user'] = '';
+$CONFIG['password'] = '';
+$CONFIG['database'] = '';
+
+$CONFIG['default_max'] = 25;
+$CONFIG['real_max'] = 250;
+$CONFIG['smarty'] = 'smarty/Smarty.class.php';
+$CONFIG['server'] = $_SERVER['HTTP_HOST'];
+?>

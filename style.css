@@ -1,0 +1,74 @@
+/* Colors
+1: 9688AB
+2: B8A7D1
+3: DAC6F7
+4: ABABAB (primary rows)
+5: D1D1D1 (secondary rows)
+6: F7F7F7 (text)
+7: 545454 
+8: ABABAB
+9: 000000
+*/
+
+body, htnl
+{
+	color: #000000;
+	background-color: #F7F7F7;
+	#background-color: #B8A7D1;
+}
+
+table.specification
+{
+	border-color: #B8A7D1;
+	border-style: dashed;
+	border-width: 2px;
+}
+
+td 
+{
+	text-align: center;
+	border-color: #B8A7D1;
+	border-style: solid;
+	border-width: 1px;
+	vertical-align: top;
+}
+
+tr, thead, tfoot
+{
+	border-width: 0px;
+}
+
+td.details 
+{
+	text-align: left;
+	font-size: small;
+}
+
+th,tfoot
+{
+	font-weight: bold;
+	color: #F7F7F7;
+	background-color: #545454;
+}
+
+a:link,a:visited,a:active,a:hover
+{
+	color: #0000FF;
+}
+
+a:link.footer,a:visited.footer,a:active.footer,a:hover.footer
+{
+	color: #00FF00;
+}
+
+
+
+
+tr.secondary
+{
+	background-color: #ABABAB;
+}
+tr.primary
+{
+	background-color: #D1D1D1;
+}
