@@ -177,10 +177,7 @@ if ($results > 0)
 
 if ($output=="json") 
 {
-	if ($outputversion>=1.2) 
-	{ 
-		$outarray["revision"]=$outputversion; 
-	}
+	$outarray["revision"]=$outputversion; 
 	$outarray['version'] = VERSION;
 	$outarray['source'] = SOURCE;
 	$outarray['server'] = SERVER;
