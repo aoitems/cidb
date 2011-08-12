@@ -34,11 +34,10 @@
 				</tr>
 				<tr class="primary">
 					<td>output</td>
-					<td class="details"><b>[REQUIRED]</b> Specifies which format the results will be returned as. XML or Json is recommended, while AOML allows for lazy implementation.<br /> 
+					<td class="details"><b>[REQUIRED]</b> Specifies which format the results will be returned as. XML is recommended, while AOML allows for lazy implementation.<br /> 
 						<b>Valid options</b>: 
 							<a href="/?bot=example&amp;output=aoml&amp;search=combined%20foot">aoml</a>,
 							<a href="/?bot=example&amp;output=xml&amp;search=combined%20foot">xml</a>, 
-							<a href="/?bot=example&amp;output=json&amp;search=combined%20foot">json</a>,
 							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot">txt</a>
 					</td>
 				</tr>
@@ -74,9 +73,14 @@
 					</td>
 				</tr>
 				<tr class="primary">
-					<td>1.2</td>
+					<td rowspan="2">1.2</td>
 					<td>version</td>
-					<td class="details"><b>[REQUIRED]</b> Specify version=1.2 to enable output version 1.2. <b>Example</b>:  
+					<td class="details"><b>[REQUIRED]</b> Specify version=1.2 to enable output version 1.2.</td>
+				</tr>
+				<tr class="primary">
+					<td>output</td>
+					<td class="details"><b>[REQUIRED]</b> Specifies which format the results will be returned as. Json or XML is recommended, while AOML allows for lazy implementation.<br /> 
+						<b>Valid options</b>: 
 							<a href="/?bot=example&amp;output=aoml&amp;search=combined%20foot&amp;version=1.2">aoml</a>,
 							<a href="/?bot=example&amp;output=xml&amp;search=combined%20foot&amp;version=1.2">xml</a>, 
 							<a href="/?bot=example&amp;output=json&amp;search=combined%20foot&amp;version=1.2">json</a>,
