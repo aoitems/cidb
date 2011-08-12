@@ -53,10 +53,11 @@
 					<td rowspan="2">1.1-Extension</td>
 					<td>type</td>
 					<td class="details"><b>[OPTIONAL]</b> Specifies what item type to search for. <b>Valid options</b>:
-																<a href="/?bot=example&amp;output=xml&amp;search=combined&amp;type=armor">Armor</a>, 
-																<a href="/?bot=example&amp;output=xml&amp;search=combined&amp;type=misc">Misc</a>, 
 																<a href="/?bot=example&amp;output=xml&amp;search=t&amp;type=weapon">Weapon</a>,
-																<a href="/?bot=example&amp;output=xml&amp;search=treatment&amp;slot=head&amp;type=implant">Implant</a>
+																<a href="/?bot=example&amp;output=xml&amp;search=combined&amp;type=armor">Armor</a>,
+																<a href="/?bot=example&amp;output=xml&amp;search=treatment&amp;slot=head&amp;type=implant">Implant</a>,
+																<a href="/?bot=example&amp;output=xml&amp;search=belt&amp;type=utility">Utility</a>,
+																<a href="/?bot=example&amp;output=xml&amp;search=combined&amp;type=misc">Misc</a>
 																<br />
 					</td>
 				</tr>
@@ -85,7 +86,7 @@
 							<a href="/?bot=example&amp;output=xml&amp;search=combined%20foot&amp;version=1.2">xml</a>, 
 							<a href="/?bot=example&amp;output=json&amp;search=combined%20foot&amp;version=1.2">json</a>,
 							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">txt</a>, 
-							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">html</a>
+							<a href="/?bot=example&amp;output=html&amp;search=combined%20foot&amp;version=1.2">html</a>
 					</td>
 				</tr>
 			</tbody>
