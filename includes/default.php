@@ -14,8 +14,9 @@ $smarty->assign("relations", number_format(RELATIONS,0,".",","));
 
 
 /*	Find top bots, by requests */
-$sql="select sum(hits) as hits from log";
-$totalhits = mysql_fetch_array(mysql_query($sql,$db),MYSQL_ASSOC);
+$sql="select sum(hits) as hits from log WHERE bot!='example'";
+$totalhits = $db->query($sql);
+$totalhits = $totalhists->fetch_assoc();
 $onepercent = $totalhits["hits"]/100;
 
 if (! xcache_isset("topbots")) 
@@ -23,11 +24,12 @@ if (! xcache_isset("topbots"))
 	$sql="select bot as botname,
 	SUM(hits) as totalhits
 	from log WHERE bot!='example' group by botname order by totalhits desc limit 0,5";
-	$sql=mysql_query($sql,$db);
-	while($result = mysql_fetch_array($sql,MYSQL_ASSOC)) {
-		$topbots[$result["botname"]]=round($result["totalhits"]/$onepercent,2);
+	$result=$db->query($sql);
+	while($row = $result->fetch_assoc()) 
+	{
+		$topbots[$row["botname"]]=round($row["totalhits"]/$onepercent,2);
 	}
-	xcache_set("topbots", gzdeflate(serialize($topbots), 3), 60);
+	xcache_set("topbots", gzdeflate(serialize($topbots), 3), 600);
 }
 else 
 {
