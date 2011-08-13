@@ -32,7 +32,7 @@ function GetQuality()
 	{
 		if (!is_numeric($_GET['ql']))
 		{
-			error('Invalid "Ql" value');
+			Error('Invalid "Ql" value');
 		}
 		if ($_GET['ql'] >= 0 && $_GET['ql'] <= 999)
 		{
@@ -54,7 +54,7 @@ function GetOutputVersion()
 			case 1.2:
 				break;
 			default:
-				error('Unsupported version. I support versions: 1.1, 1.2');
+				Error('Unsupported version. I support versions: 1.1, 1.2');
 				break;
 		}
 	}
@@ -88,7 +88,7 @@ function GetMaxResults()
 	{
 		if (!is_numeric($_GET['max']))
 		{
-			error('Invalid "Max" value');
+			Error('Invalid "Max" value');
 		}
 		if ($_GET['max'] > REAL_MAX)
 		{
@@ -100,5 +100,65 @@ function GetMaxResults()
 		}
 	}
 	return $max;
+}
+
+function SendCacheHeaders($seconds_to_cache, $public=true)
+{
+	$ts = gmdate("D, d M Y H:i:s", (time() + $seconds_to_cache)) . " GMT";
+	header("Expires: $ts");
+	header("Pragma: cache");
+	if ($public)
+	$cc="public";
+	else
+	$cc="private";
+	header("Cache-Control: $cc, maxage=$seconds_to_cache");
+}
+
+// Database Connection
+function ConnectToDatabase($config)
+{
+	$db = new mysqli($config["host"], $config["user"], $config["password"]);
+	if ($db->connect_errno > 0)
+	{
+		define('CONNECTED', false);
+	}
+	else
+	{
+		$db->select_db($config["database"]);
+		if (mysql_errno() > 0)
+		{
+			define('CONNECTED', false);
+		}
+		else
+		{
+			define('CONNECTED', true);
+		}
+	}
+	// Fetch metadata
+	if (!xcache_isset("metadata"))
+	{
+		$q = $db->query("SELECT * FROM metadata ORDER BY time DESC LIMIT 1");
+		$metadata = $q->fetch_assoc();
+		xcache_set("metadata", gzdeflate(serialize($metadata), 3), 300);
+	}
+	else
+	{
+		$metadata = unserialize(gzinflate(xcache_get("metadata")));
+	}
+	define('VERSION', $metadata["version"]);
+	define('SOURCE', $metadata["source"]);
+	define('UPDATED', $metadata["time"]);
+	define('ITEMS', $metadata["items"]);
+	define('RELATIONS', $metadata["relations"]);
+	return $db;
+}
+
+// Error Output
+function Error($message)
+{
+	global $smarty;
+	$smarty->assign('message', $message);
+	$smarty->display('error.tpl');
+	exit();
 }
 ?>
