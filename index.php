@@ -43,7 +43,7 @@ $output = strip_tags(basename(strtolower($_GET['output'])));
 $template = 'output.'.$output.'.tpl';
 if (($output != "json" && !$smarty->templateExists($template))) 
 {
-	error('Invalid "Output" value');
+	Error('Invalid "Output" value');
 }
 
 // Per-template configuration
@@ -59,11 +59,11 @@ if ($output=="aoml")
 // Required input
 if (empty($_GET['search'])) 
 {
-	error('Value "Search" not defined!');
+	Error('Value "Search" not defined!');
 }
 if (empty($_GET['bot'])) 
 {
-	error('Value "Bot" not defined!');
+	Error('Value "Bot" not defined!');
 }
 $search = $_GET['search'];
 $bot = $_GET['bot'];
@@ -77,10 +77,10 @@ $max = GetMaxResults();					// Maximum results to return
 // Version check
 if (($output=="json" || $output=='html') && $outputversion<1.2)
 {
-	error($output." is only available for version 1.2 and later");
+	Error($output." is only available for version 1.2 and later");
 }
 
-$db=connect_to_db($CONFIG);
+$db=ConnectToDatabase($CONFIG);
 if (CONNECTED === false) 
 {
 	die("Error: Couldn't connect to database");
