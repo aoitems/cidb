@@ -102,9 +102,9 @@ if ($type !== false)
 {
 	$sql .= " AND t2.itemtype='".$db->real_escape_string($type)."' ";	
 }
-else 
+else if ($outputversion>1.1 || ($outputversion == 1.1 && stristr($search, "imp")===false))
 {
-	// Exclude implants by default
+	// Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
 	$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
 }
 
