@@ -33,7 +33,7 @@ $bannedips[]="0.0.0.0";
 if (empty($_GET['output'])) 
 {
 	require_once("includes/default.php");
-	$smarty->assign('header', $CONFIG['server']);
+	$smarty->assign('header', $CONFIG['header']);
 	$smarty->assign('title', $CONFIG['title']);
 	$smarty->display('index.tpl');
 	exit();
