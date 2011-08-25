@@ -57,7 +57,6 @@ if ($output=="aoml")
 	$smarty->assign('display_icon', ((isset($_GET['display_icon']) && $_GET['display_icon'] == 'false') ? false : true));
 }
 
-
 // Required input
 if (empty($_GET['search'])) 
 {
@@ -67,14 +66,14 @@ if (empty($_GET['bot']))
 {
 	Error('Value "Bot" not defined!');
 }
-$search = $_GET['search'];
+$data['search'] = $_GET['search'];
 $bot = $_GET['bot'];
 
-$ql = GetQuality(); 					// Quality
+$data['ql'] = GetQuality(); 			// Quality
 $outputversion = GetOutputVersion(); 	// Output version
-$type=GetItemType();					// Item Type
-$slots=GetSlots();						// Item Slots
-$max = GetMaxResults();					// Maximum results to return
+$data['type']=GetItemType();			// Item Type
+$data['slots']=GetSlots();				// Item Slots
+$data['max'] = GetMaxResults();			// Maximum results to return
 
 // Version check
 if (($output=="json" || $output=='html') && $outputversion<1.2)
@@ -90,43 +89,9 @@ if (CONNECTED === false)
 // Log request
 $db->query("INSERT INTO `log` (ip, bot, hits) VALUES ('".$db->real_escape_string($_SERVER['REMOTE_ADDR'])."', '".$db->real_escape_string($bot)."', 1) ON DUPLICATE KEY UPDATE hits = hits + 1");
 
-
-/*** SEARCH DATABASE ***/
-$sql =	"SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos ".
-		"FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ".
-		"WHERE t2.name LIKE '%".$db->real_escape_string(str_replace(' ', '%', $search))."%' ";
-if ($ql > 0) 
-{
-	$sql .= ' AND ((t2.ql <= '.$ql.' AND t3.ql >= '.$ql.') OR (t2.ql >= '.$ql.' AND t3.ql <= '.$ql.')) ';
-}
-
-if ($type !== false) 
-{
-	$sql .= " AND t2.itemtype='".$db->real_escape_string($type)."' ";	
-}
-else if ($outputversion>1.1 || ($outputversion == 1.1 && stristr($search, "imp")===false))
-{
-	// Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
-	$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
-}
-
-if (is_array($slots) && count($slots)>0) 
-{
-	$sql.=" AND (";
-	$set=false;
-	foreach ($slots as $slot) 
-	{
-		if ($set===true)
-		{
-			$sql.=" OR";
-		}
-		$sql.= " t2.slot LIKE '%".$db->real_escape_string($slot)."%' ";
-		$set=true;
-	}
-	$sql.=") ";
-}
-
-$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$max;
+// Make the right SQL query depending on output version
+if ($outputversion == 1.1)	{ $sql = GenerateSqlQuery11($db, $data); }
+if ($outputversion == 1.2)	{ $sql = GenerateSqlQuery12($db, $data); }
 
 if ($_GET["debug"]>0) 
 {
@@ -149,7 +114,7 @@ if ($results > 0)
 {
 	while ($row = $result->fetch_assoc()) 
 	{
-		if ($row['lowql'] < $row['highql']) {
+		if ($row['lowql'] <= $row['highql']) {
 			$lowid = $row['lowid'];
 			$highid = $row['highid'];
 			$lowql = $row['lowql'];
@@ -175,6 +140,7 @@ if ($results > 0)
 		{
 			$iconid = 0;
 		}
+		
 		if ($ql > 0) 
 		{
 			if ((($highql-$lowql)/2) > ($ql-$lowql)) 

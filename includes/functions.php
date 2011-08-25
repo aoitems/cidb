@@ -161,4 +161,76 @@ function Error($message)
 	$smarty->display('error.tpl');
 	exit();
 }
+
+// Generate SQL queries
+
+function GenerateSqlQueryBase($db, $data) 
+{
+	// Filter by name
+	$sql =	"SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos ".
+			"FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ".
+			"WHERE t2.name LIKE '%".$db->real_escape_string(str_replace(' ', '%', $data['search']))."%' ";
+	// Filter by QL
+	if ($data['ql'] > 0)
+	{
+		$sql .= ' AND ((t2.ql <= '.$data['ql'].' AND t3.ql >= '.$data['ql'].') OR (t2.ql >= '.$data['ql'].' AND t3.ql <= '.$data['ql'].')) ';
+	}
+	
+	// Check slots
+	if (is_array($data['slots']) && count($data['slots'])>0)
+	{
+		$sql.=" AND (";
+		$set=false;
+		foreach ($data['slots'] as $slot)
+		{
+			if ($set===true)
+			{
+				$sql.=" OR";
+			}
+			$sql.= " t2.slot LIKE '%".$db->real_escape_string($slot)."%' ";
+			$set=true;
+		}
+		$sql.=") ";
+	}
+	// Return data
+	return $sql;
+}
+
+// Search criteria specific for output version 1.1
+function GenerateSqlQuery11($db, $data) 
+{
+	$sql = GenerateSqlQueryBase($db, $data);
+	
+	if ($data['type'] !== false)
+	{
+		$sql .= " AND t2.itemtype='".$db->real_escape_string($data['type'])."' ";
+	}
+	else if (stristr($data['search'], "imp")===false)
+	{
+		// Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
+		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
+	}
+
+	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$data['max'];
+	return $sql;
+}
+
+// Search criteria specific for output version 1.2
+function GenerateSqlQuery12($db, $data)
+{
+	$sql = GenerateSqlQueryBase($db, $data);
+
+	if ($data['type'] !== false)
+	{
+		$sql .= " AND t2.itemtype='".$db->real_escape_string($data['type'])."' ";
+	}
+	else
+	{
+		// Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
+		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
+	}
+
+	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$data['max'];
+	return $sql;
+}
 ?>
