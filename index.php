@@ -110,6 +110,7 @@ else
 }
 
 $rows = array();
+
 if ($results > 0) 
 {
 	while ($row = $result->fetch_assoc()) 
@@ -179,9 +180,9 @@ if ($output=="json")
 	$outarray['version'] = VERSION;
 	$outarray['source'] = SOURCE;
 	$outarray['server'] = SERVER;
-	$outarray['search'] = $search;
-	$outarray['ql'] = $ql;
-	$outarray['max'] = $max;
+	$outarray['search'] = $data['search'];
+	$outarray['ql'] = $data['ql'];
+	$outarray['max'] = $data['max'];
 	$outarray['results_count'] = $results;
 	$outarray['results'] = $rows;
 	header('Content-Type: application/json');
@@ -193,9 +194,9 @@ if ($output=="json")
 $smarty->assign('version', VERSION);
 $smarty->assign('source', SOURCE);
 $smarty->assign('server', SERVER);
-$smarty->assign('search', $search);
-$smarty->assign('ql', $ql);
-$smarty->assign('max', $max);
+$smarty->assign('search', $data['search']);
+$smarty->assign('ql', $data['ql']);
+$smarty->assign('max', $data['max']);
 $smarty->assign('results_count', $results);
 $smarty->assign('results', $rows);
 $smarty->assign('outputversion', $outputversion);
