@@ -173,7 +173,7 @@ function GenerateSqlQueryBase($db, $data)
 	// Filter by QL
 	if ($data['ql'] > 0)
 	{
-		$sql .= ' AND ((t2.ql <= '.$data['ql'].' AND t3.ql >= '.$data['ql'].') OR (t2.ql >= '.$data['ql'].' AND t3.ql <= '.$data['ql'].')) ';
+		$sql .= " AND ((t2.ql <= '".$db->real_escape_string($data['ql'])."' AND t3.ql >= '".$sql->real_escape_string($data['ql'])."') OR (t2.ql >= '".$sql->real_escape_string($data['ql'])."' AND t3.ql <= '".$sql->real_escape_string($data['ql'])."')) ";
 	}
 	
 	// Check slots
@@ -211,7 +211,7 @@ function GenerateSqlQuery11($db, $data)
 		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
 	}
 
-	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$data['max'];
+	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$sql->real_escape_string($data['max']);
 	return $sql;
 }
 
@@ -230,7 +230,7 @@ function GenerateSqlQuery12($db, $data)
 		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
 	}
 
-	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$data['max'];
+	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$sql->real_escape_string($data['max']);
 	return $sql;
 }
 ?>
