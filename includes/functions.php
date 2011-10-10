@@ -173,7 +173,7 @@ function GenerateSqlQueryBase($db, $data)
 	// Filter by QL
 	if ($data['ql'] > 0)
 	{
-		$sql .= " AND ((t2.ql <= '".$db->real_escape_string($data['ql'])."' AND t3.ql >= '".$sql->real_escape_string($data['ql'])."') OR (t2.ql >= '".$sql->real_escape_string($data['ql'])."' AND t3.ql <= '".$sql->real_escape_string($data['ql'])."')) ";
+		$sql .= " AND ((t2.ql <= '".$db->real_escape_string($data['ql'])."' AND t3.ql >= '".$db->real_escape_string($data['ql'])."') OR (t2.ql >= '".$db->real_escape_string($data['ql'])."' AND t3.ql <= '".$db->real_escape_string($data['ql'])."')) ";
 	}
 	
 	// Check slots
