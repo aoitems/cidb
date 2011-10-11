@@ -142,9 +142,9 @@ if ($results > 0)
 			$iconid = 0;
 		}
 		
-		if ($ql > 0) 
+		if ($data['ql'] > 0) 
 		{
-			if ((($highql-$lowql)/2) > ($ql-$lowql)) 
+			if ((($highql-$lowql)/2) > ($data['ql']-$lowql)) 
 			{
 				$name = $lowname;
 			} 
