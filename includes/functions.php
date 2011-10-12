@@ -167,7 +167,8 @@ function Error($message)
 function GenerateSqlQueryBase($db, $data) 
 {
 	// Filter by name
-	$sql =	"SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos ".
+	$sql =	"SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos, ".
+			"MATCH(t2.name) AGAINST ('+".$db->real_escape_string(str_replace(' ', ' +', $data['search']))."') as Relevance ".
 			"FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ".
 			"WHERE t2.name LIKE '%".$db->real_escape_string(str_replace(' ', '%', $data['search']))."%' ";
 	// Filter by QL
@@ -211,7 +212,7 @@ function GenerateSqlQuery11($db, $data)
 		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
 	}
 
-	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
+	$sql .=	"ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
 	return $sql;
 }
 
@@ -230,7 +231,7 @@ function GenerateSqlQuery12($db, $data)
 		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
 	}
 
-	$sql .=	"ORDER BY t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
+	$sql .=	"ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
 	return $sql;
 }
 ?>
