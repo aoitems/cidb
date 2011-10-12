@@ -170,7 +170,7 @@ function GenerateSqlQueryBase($db, $data)
 	$likestring=array();
 	$notlikestring=array();
 	$matchstring=array();
-	foreach ($words => $word) 
+	foreach ($words as $word) 
 	{
 		if (substr($word,0,1)!= "-")
 		{
@@ -179,7 +179,7 @@ function GenerateSqlQueryBase($db, $data)
 		}
 		else 
 		{
-			$notlikestring[]=substring($word,1);
+			$notlikestring[]=substr($word,1);
 			
 		}
 	}
@@ -192,7 +192,7 @@ function GenerateSqlQueryBase($db, $data)
 	$sql =	"SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos, ".
 			"MATCH(t2.name) AGAINST ('".$db->real_escape_string($matchstring)."') as Relevance ".
 			"FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ".
-			"WHERE t2.name LIKE '%".$db->real_escape_string($likestring)."%' AND t2.name NOW LIKE '%".$db->real_escape_string($notlikestring)."%' ";
+			"WHERE t2.name LIKE '%".$db->real_escape_string($likestring)."%' AND t2.name NOT LIKE '%".$db->real_escape_string($notlikestring)."%' ";
 	// Filter by QL
 	if ($data['ql'] > 0)
 	{
