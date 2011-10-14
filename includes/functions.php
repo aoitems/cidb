@@ -52,9 +52,10 @@ function GetOutputVersion()
 		{
 			case 1.1:
 			case 1.2:
+			case 2.0:
 				break;
 			default:
-				Error('Unsupported version. I support versions: 1.1, 1.2');
+				Error('Unsupported version. I support versions: 1.1, 1.2, 2.0');
 				break;
 		}
 	}
@@ -79,6 +80,18 @@ function GetSlots()
 		$slots = explode(",", $_GET["slot"]);
 	}
 	return $slots;
+}
+
+function GetSource20() 
+{
+	switch ($_GET["source"])
+	{
+		case "items": return "items_2.0.php"; 
+		//case "monsters": return "monsters_2.0.php";
+		//case "shop": return "shop_2.0.php";
+		default: 
+			Error("Invalid source specified"); 
+	}
 }
 
 function GetMaxResults()
@@ -188,35 +201,43 @@ function GenerateSqlQueryBase($db, $data)
 	
 	
 	// Filter by name
-	$sql =	"SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos, ".
-			"MATCH(t2.name) AGAINST ('".$db->real_escape_string($matchstring)."') as Relevance ".
-			"FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ".
-			"WHERE t2.name LIKE '%".$db->real_escape_string($likestring)."%' ";
+	$sql["select"] =	" SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos, ".
+			"MATCH(t2.name) AGAINST ('".$db->real_escape_string($matchstring)."') as Relevance ";
+	$sql["from"] = " FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ";
+	$sql["where"]=" WHERE ((t2.name LIKE '%".$db->real_escape_string($likestring)."%' ";
 			foreach ($notlikestring as $notlike) 
 			{
-				$sql.=" AND t2.name NOT LIKE '%".$db->real_escape_string($notlike)."%' ";
+				$sql["where"].=" AND t2.name NOT LIKE '%".$db->real_escape_string($notlike)."%' ";
 			}
+			$sql["where"].=") ";
+	$sql["where"].=" OR (t3.name LIKE '%".$db->real_escape_string($likestring)."%' ";
+			foreach ($notlikestring as $notlike) 
+			{
+				$sql["where"].=" AND t3.name NOT LIKE '%".$db->real_escape_string($notlike)."%' ";
+			}
+			$sql["where"].=")) ";
+			
 	// Filter by QL
 	if ($data['ql'] > 0)
 	{
-		$sql .= " AND ((t2.ql <= '".$db->real_escape_string($data['ql'])."' AND t3.ql >= '".$db->real_escape_string($data['ql'])."') OR (t2.ql >= '".$db->real_escape_string($data['ql'])."' AND t3.ql <= '".$db->real_escape_string($data['ql'])."')) ";
+		$sql["where"] .= " AND ((t2.ql <= '".$db->real_escape_string($data['ql'])."' AND t3.ql >= '".$db->real_escape_string($data['ql'])."') OR (t2.ql >= '".$db->real_escape_string($data['ql'])."' AND t3.ql <= '".$db->real_escape_string($data['ql'])."')) ";
 	}
 	
 	// Check slots
 	if (is_array($data['slots']) && count($data['slots'])>0)
 	{
-		$sql.=" AND (";
+		$sql["where"].=" AND (";
 		$set=false;
 		foreach ($data['slots'] as $slot)
 		{
 			if ($set===true)
 			{
-				$sql.=" OR";
+				$sql["where"].=" OR";
 			}
-			$sql.= " t2.slot LIKE '%".$db->real_escape_string($slot)."%' ";
+			$sql["where"].= " t2.slot LIKE '%".$db->real_escape_string($slot)."%' ";
 			$set=true;
 		}
-		$sql.=") ";
+		$sql["where"].=") ";
 	}
 	// Return data
 	return $sql;
@@ -229,15 +250,14 @@ function GenerateSqlQuery11($db, $data)
 	
 	if ($data['type'] !== false)
 	{
-		$sql .= " AND t2.itemtype='".$db->real_escape_string($data['type'])."' ";
+		$sql["where"] .= " AND t2.itemtype='".$db->real_escape_string($data['type'])."' ";
 	}
 	else if (stristr($data['search'], "imp")===false)
 	{
 		// Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
-		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
+		$sql["where"].=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
 	}
-
-	$sql .=	"ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
+	$sql["orderby"] =	"ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
 	return $sql;
 }
 
@@ -248,15 +268,20 @@ function GenerateSqlQuery12($db, $data)
 
 	if ($data['type'] !== false)
 	{
-		$sql .= " AND t2.itemtype='".$db->real_escape_string($data['type'])."' ";
+		$sql["where"] .= " AND t2.itemtype='".$db->real_escape_string($data['type'])."' ";
 	}
 	else
 	{
 		// Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
-		$sql.=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
+		$sql["where"].=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
 	}
-
-	$sql .=	"ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
+	
+	$sql["orderby"] =	"ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, ".$db->real_escape_string($data['max']);
 	return $sql;
+}
+
+function FinalizeSqlString($sql) 
+{
+	return $sql["select"].$sql["from"].$sql["where"].$sql["orderby"];
 }
 ?>
