@@ -84,10 +84,24 @@ if ($results > 0)
 			$name = $lowname;
 		}
 		
+		/* TODO:
+		*	If item is at "max level" (i.e. highid is for ql 200, and item is ql 200), should match for only highid.
+		*
+		*
+		*
+		*/
 		// Get itemloc info
 		global $CONFIG;
 		$db->select_db($CONFIG['lootinfo_database']);
-		$itemloc=$db->query("SELECT `type` as Type,`description` as Description FROM `locations` WHERE lowid='".$lowid."' AND highid='".$highid."'");
+		$itemloc=$db->query("SELECT 
+		mt.description as Type,
+		gm.name as Description
+		
+		FROM `itemMap` AS im
+		LEFT JOIN `itemMapTypes` AS mt ON (mt.id=im.type)
+		LEFT JOIN `itemGeneralMap` AS gm ON (gm.id=im.lookup)
+		
+		WHERE item_lowid='".$lowid."' OR item_highid='".$highid."'");
 		
 		$sources=array();
 		while ($loot=$itemloc->fetch_assoc())
