@@ -93,7 +93,7 @@ if ($results > 0)
 		// Get itemloc info
 		global $CONFIG;
 		$db->select_db($CONFIG['lootinfo_database']);
-		$itemloc=$db->query("SELECT 
+		$itemloc=$db->query("SELECT DISTINCT 
 		mt.description as Type,
 		gm.name as Description
 		
