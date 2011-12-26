@@ -1,4 +1,10 @@
 <?php
+if (!INSIDE_CMS)
+{
+	header("location: /");
+	return;
+}
+
 // Collect query information.
 $data['search'] = $_GET['search'];
 $bot = $_GET['bot'];
