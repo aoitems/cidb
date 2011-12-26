@@ -47,10 +47,10 @@ switch($outputversion)
 {
 	case 1.1:
 	case 1.2:
-		$workfile="./v1.1-1.2.php";
+		$workfile="./includes/versioned/v1.1-1.2.php";
 		break;
 	case 2.0:
-		$workfile="./v2.0.php";
+		$workfile="./includes/versioned/v2.0.php";
 		break;
 	default:
 		Error('Unsupported output version!');

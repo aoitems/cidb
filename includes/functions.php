@@ -86,7 +86,7 @@ function GetSource20()
 {
 	switch ($_GET["source"])
 	{
-		case "items": return "items_2.0.php"; 
+		case "items": return "./includes/versioned/2.0/items.php"; 
 		//case "monsters": return "monsters_2.0.php";
 		//case "shop": return "shop_2.0.php";
 		default: 
