@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>{$title}</title>
-		<link type="text/css" href="/style.css" rel="stylesheet" />
+		<link type="text/css" href="style.css" rel="stylesheet" />
 	</head>
 	<body>
 		<center>
