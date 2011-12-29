@@ -36,14 +36,14 @@
 					<td>output</td>
 					<td class="details"><b>[REQUIRED]</b> Specifies which format the results will be returned as. XML is recommended, while AOML allows for lazy implementation.<br /> 
 						<b>Valid options</b>: 
-							<a href="/?bot=example&amp;output=aoml&amp;search=combined%20foot">aoml</a>,
-							<a href="/?bot=example&amp;output=xml&amp;search=combined%20foot">xml</a>, 
-							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot">txt</a>
+							<a href="?bot=example&amp;output=aoml&amp;search=combined%20foot">aoml</a>,
+							<a href="?bot=example&amp;output=xml&amp;search=combined%20foot">xml</a>, 
+							<a href="?bot=example&amp;output=txt&amp;search=combined%20foot">txt</a>
 					</td>
 				</tr>
 				<tr class="primary">
 					<td>ql</td>
-					<td class="details"><b>[OPTIONAL]</b> Specifies which QL the item you're searching for is. <b>Example</b>: <a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;ql=250">250</a></td>
+					<td class="details"><b>[OPTIONAL]</b> Specifies which QL the item you're searching for is. <b>Example</b>: <a href="?bot=example&amp;output=txt&amp;search=combined%20foot&amp;ql=250">250</a></td>
 				</tr>
 				<tr class="primary">
 					<td>max</td>
@@ -53,11 +53,11 @@
 					<td rowspan="2">1.1-Extension</td>
 					<td>type</td>
 					<td class="details"><b>[OPTIONAL]</b> Specifies what item type to search for. <b>Valid options</b>:
-																<a href="/?bot=example&amp;output=xml&amp;search=t&amp;type=weapon">Weapon</a>,
-																<a href="/?bot=example&amp;output=xml&amp;search=combined&amp;type=armor">Armor</a>,
-																<a href="/?bot=example&amp;output=xml&amp;search=treatment&amp;slot=head&amp;type=implant">Implant</a>,
-																<a href="/?bot=example&amp;output=xml&amp;search=belt&amp;type=utility">Utility</a>,
-																<a href="/?bot=example&amp;output=xml&amp;search=combined&amp;type=misc">Misc</a>
+																<a href="?bot=example&amp;output=xml&amp;search=t&amp;type=weapon">Weapon</a>,
+																<a href="?bot=example&amp;output=xml&amp;search=combined&amp;type=armor">Armor</a>,
+																<a href="?bot=example&amp;output=xml&amp;search=treatment&amp;slot=head&amp;type=implant">Implant</a>,
+																<a href="?bot=example&amp;output=xml&amp;search=belt&amp;type=utility">Utility</a>,
+																<a href="?bot=example&amp;output=xml&amp;search=combined&amp;type=misc">Misc</a>
 																<br />
 					</td>
 				</tr>
@@ -68,8 +68,8 @@
 						<b>Armor slots</b>: Neck, Head, Back, RightShoulder, Chest, LeftShoulder, RightArm, Hands, LeftArm, RightWrist, Legs, LeftWrist, RightFinger, Feet, LeftFinger<br />
 						<b>Implant slots</b>: Eyes, Head, Ears, RightArm, Chest, LeftArm, RightWrist, Waist, LeftWrist, RightHand, Legs, LeftHand, Feet<br />
 						<b>Examples</b>: 
-																	<a href="/?bot=example&amp;output=xml&amp;search=combined&amp;type=armor&amp;slot=head">Head</a>, 
-																	<a href="/?bot=example&amp;output=xml&amp;search=pen%20ofa%20crat&amp;type=armor&amp;slot=head,arm,feet">Head+Arm+Feet</a>
+																	<a href="?bot=example&amp;output=xml&amp;search=combined&amp;type=armor&amp;slot=head">Head</a>, 
+																	<a href="?bot=example&amp;output=xml&amp;search=pen%20ofa%20crat&amp;type=armor&amp;slot=head,arm,feet">Head+Arm+Feet</a>
 																	<br />
 					</td>
 				</tr>
@@ -82,11 +82,11 @@
 					<td>output</td>
 					<td class="details"><b>[REQUIRED]</b> Specifies which format the results will be returned as. Json or XML is recommended, while AOML allows for lazy implementation.<br /> 
 						<b>Valid options</b>: 
-							<a href="/?bot=example&amp;output=aoml&amp;search=combined%20foot&amp;version=1.2">aoml</a>,
-							<a href="/?bot=example&amp;output=xml&amp;search=combined%20foot&amp;version=1.2">xml</a>, 
-							<a href="/?bot=example&amp;output=json&amp;search=combined%20foot&amp;version=1.2">json</a>,
-							<a href="/?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">txt</a>, 
-							<a href="/?bot=example&amp;output=html&amp;search=combined%20foot&amp;version=1.2">html</a>
+							<a href="?bot=example&amp;output=aoml&amp;search=combined%20foot&amp;version=1.2">aoml</a>,
+							<a href="?bot=example&amp;output=xml&amp;search=combined%20foot&amp;version=1.2">xml</a>, 
+							<a href="?bot=example&amp;output=json&amp;search=combined%20foot&amp;version=1.2">json</a>,
+							<a href="?bot=example&amp;output=txt&amp;search=combined%20foot&amp;version=1.2">txt</a>, 
+							<a href="?bot=example&amp;output=html&amp;search=combined%20foot&amp;version=1.2">html</a>
 					</td>
 				</tr>
 			</tbody>
