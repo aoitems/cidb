@@ -148,15 +148,16 @@ function ConnectToDatabase($config)
 		}
 	}
 	// Fetch metadata
-	if (!xcache_isset("metadata"))
+	$xcache_metadata_name=md5($config['header']."metadata");
+	if (!xcache_isset($xcache_metadata_name))
 	{
 		$q = $db->query("SELECT * FROM metadata ORDER BY time DESC LIMIT 1");
 		$metadata = $q->fetch_assoc();
-		xcache_set("metadata", gzdeflate(serialize($metadata), 3), 300);
+		xcache_set($xcache_metadata_name, gzdeflate(serialize($metadata), 3), 300);
 	}
 	else
 	{
-		$metadata = unserialize(gzinflate(xcache_get("metadata")));
+		$metadata = unserialize(gzinflate(xcache_get($xcache_metadata_name)));
 	}
 	define('VERSION', $metadata["version"]);
 	define('SOURCE', $metadata["source"]);
