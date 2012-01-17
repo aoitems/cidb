@@ -44,7 +44,9 @@ $totalhits = $db->query($sql);
 $totalhits = $totalhits->fetch_assoc();
 $onepercent = $totalhits["hits"]/100;
 
-if (! xcache_isset("topbots")) 
+$xcache_topbots_name = md5($CONFIG['header']."topbots");
+
+if (! xcache_isset($xcache_topbots_name)) 
 {
 	$sql="select bot as botname,
 	SUM(hits) as totalhits
@@ -54,11 +56,11 @@ if (! xcache_isset("topbots"))
 	{
 		$topbots[$row["botname"]]=round($row["totalhits"]/$onepercent,2);
 	}
-	xcache_set("topbots", gzdeflate(serialize($topbots), 3), 600);
+	xcache_set($xcache_topbots_name, gzdeflate(serialize($topbots), 3), 600);
 }
 else 
 {
-	$topbots = unserialize(gzinflate(xcache_get("topbots")));
+	$topbots = unserialize(gzinflate(xcache_get($xcache_topbots_name)));
 }
 $smarty->assign("topbots_byrequests", $topbots);
 ?>
