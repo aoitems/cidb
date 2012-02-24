@@ -61,7 +61,7 @@ WHERE (t1.lowid='{$db->real_escape_string($data['id'])}' OR t1.highid='{$db->rea
 if ($data['ql']!=0)
 { 
 	$sql.= " AND
-	t1.ql<='$db->real_escape_string($data['ql'])}' AND t2.ql>='{$db->real_escape_string($data['id'])}'
+	t1.ql<='{$db->real_escape_string($data['ql'])}' AND t2.ql>='{$db->real_escape_string($data['id'])}'
 	";
 }
 $result = $db->query($sql);
@@ -187,6 +187,6 @@ if ($output=="xml")
 	/*** DISPLAY RESULTS ***/
 	$smarty->assign('outarray', $outarray);
 	header("Content-Type: text/xml");
-	$smarty->display("2.0/output.xml.tpl");
+	$smarty->display("2.0/items.xml.tpl");
 }
 ?>
