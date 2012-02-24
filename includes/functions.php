@@ -89,6 +89,7 @@ function GetSource20()
 		case "items": return "./includes/versioned/2.0/items.php"; 
 		//case "monsters": return "monsters_2.0.php";
 		//case "shop": return "shop_2.0.php";
+		case "itemid": return "./includes/versioned/2.0/itemid.php";
 		default: 
 			Error("Invalid source specified"); 
 	}
