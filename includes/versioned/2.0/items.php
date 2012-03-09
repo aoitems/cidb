@@ -23,7 +23,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
 if (!INSIDE_CMS)
 {
 	header("location: /");
@@ -31,9 +30,13 @@ if (!INSIDE_CMS)
 }
 
 // Collect query information.
-$data['id'] = $_GET['id'];
+$data['search'] = $_GET['search'];
 $bot = $_GET['bot'];
 $data['ql'] = GetQuality(); 			// Quality
+$data['type']=GetItemType();			// Item Type
+$data['slots']=GetSlots();				// Item Slots
+$data['max'] = GetMaxResults();			// Maximum results to return
+
 
 $db=ConnectToDatabase($CONFIG);
 if (CONNECTED === false) 
@@ -44,27 +47,14 @@ if (CONNECTED === false)
 $db->query("INSERT INTO `log` (ip, bot, hits) VALUES ('".$db->real_escape_string($_SERVER['REMOTE_ADDR'])."', '".$db->real_escape_string($bot)."', 1) ON DUPLICATE KEY UPDATE hits = hits + 1");
 
 // Make the right SQL query depending on output version
-$sql="SELECT 
-t1.lowid, 
-t1.highid, 
-t2.ql as lowql, 
-t3.ql as highql, 
-t2.name as lowname, 
-t3.name as highname, 
-t2.icon, 
-t2.itemtype, 
-t2.slot, 
-t2.defaultpos
-FROM item_relations t1 
-LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid)
-WHERE (t1.lowid='{$db->real_escape_string($data['id'])}' OR t1.highid='{$db->real_escape_string($data['id'])}')";
-if ($data['ql']!=0)
-{ 
-	$sql.= " AND
-	t2.ql<='{$db->real_escape_string($data['ql'])}' AND t3.ql>='{$db->real_escape_string($data['ql'])}'
-	";
+if ($outputversion == 2.0)	{ $sql = GenerateSqlQuery12($db, $data); }
+
+if ($_GET["debug"]>0) 
+{
+	echo "<pre>".$sql."</pre><br /><br />";
 }
-$result = $db->query($sql);
+
+$result = $db->query(FinalizeSqlString($sql));
 
 if ($db->errno > 0) 
 {

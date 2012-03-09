@@ -31,7 +31,7 @@ if (!INSIDE_CMS)
 }
 
 // Collect query information.
-$data['id'] = $_GET['id'];
+$data['search'] = $_GET['search'];
 $bot = $_GET['bot'];
 $data['ql'] = GetQuality(); 			// Quality
 
@@ -57,13 +57,14 @@ t2.slot,
 t2.defaultpos
 FROM item_relations t1 
 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid)
-WHERE (t1.lowid='{$db->real_escape_string($data['id'])}' OR t1.highid='{$db->real_escape_string($data['id'])})'";
+WHERE (t1.lowid='{$db->real_escape_string($data['search'])}' OR t1.highid='{$db->real_escape_string($data['search'])}')";
 if ($data['ql']!=0)
 { 
 	$sql.= " AND
-	t1.ql<='{$db->real_escape_string($data['ql'])}' AND t2.ql>='{$db->real_escape_string($data['id'])}'
+	t2.ql<='{$db->real_escape_string($data['ql'])}' AND t3.ql>='{$db->real_escape_string($data['ql'])}'
 	";
 }
+
 $result = $db->query($sql);
 
 if ($db->errno > 0) 
