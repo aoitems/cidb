@@ -218,6 +218,7 @@ function GenerateSqlQuery11($db, $data) {
   else if (stristr($data['search'], "imp") === false) {
     // Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
     $sql["where"].=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
+    $sql["where"].= " AND t2.`itemtype` != 'Nano' ";
   }
   $sql["orderby"] = "ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, " . $db->real_escape_string($data['max']);
   return $sql;
@@ -227,6 +228,21 @@ function GenerateSqlQuery11($db, $data) {
 function GenerateSqlQuery12($db, $data) {
   $sql = GenerateSqlQueryBase($db, $data);
 
+  if ($data['type'] !== false) {
+    $sql["where"] .= " AND t2.itemtype='" . $db->real_escape_string($data['type']) . "' ";
+  }
+  else {
+    // Exclude implants by default, but only if version is 1.1 and search string doesn't want imps
+    $sql["where"].=" AND (t2.itemtype!='implant' OR (t2.itemtype='implant' && t2.name NOT LIKE '%implant%')) ";
+    $sql["where"].= " AND t2.`itemtype` != 'Nano' ";
+  }
+
+  $sql["orderby"] = "ORDER BY Relevance DESC, t2.name ASC, t2.ql DESC, t3.ql DESC LIMIT 0, " . $db->real_escape_string($data['max']);
+  return $sql;
+}
+
+function GenerateSqlQuery20($db,$data){
+  $sql = GenerateSqlQueryBase($db, $data);
   if ($data['type'] !== false) {
     $sql["where"] .= " AND t2.itemtype='" . $db->real_escape_string($data['type']) . "' ";
   }
