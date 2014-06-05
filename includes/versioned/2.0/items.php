@@ -47,7 +47,7 @@ $db->query("INSERT INTO `log` (ip, bot, hits) VALUES ('" . $db->real_escape_stri
 
 // Make the right SQL query depending on output version
 if ($outputversion == 2.0) {
-  $sql = GenerateSqlQuery12($db, $data);
+  $sql = GenerateSqlQuery20($db, $data);
 }
 
 if ($_GET["debug"] > 0) {
