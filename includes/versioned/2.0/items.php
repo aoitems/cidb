@@ -43,7 +43,13 @@ if (CONNECTED === false) {
   die("Error: Couldn't connect to database");
 }
 // Log request
-$db->query("INSERT INTO `log` (ip, bot, hits) VALUES ('" . $db->real_escape_string($_SERVER['REMOTE_ADDR']) . "', '" . $db->real_escape_string($bot) . "', 1) ON DUPLICATE KEY UPDATE hits = hits + 1");
+$db->query("INSERT INTO `log` (date,ip, bot, hits) VALUES ('"
+	. $db->real_escape_string(date("Y-m-d")) 
+	. "', '" 
+	. $db->real_escape_string($_SERVER['REMOTE_ADDR']) 
+	. "', '" 
+	. $db->real_escape_string($bot) 
+	. "', 1) ON DUPLICATE KEY UPDATE hits = hits + 1");
 
 // Make the right SQL query depending on output version
 if ($outputversion == 2.0) {
