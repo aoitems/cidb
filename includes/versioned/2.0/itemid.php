@@ -41,7 +41,7 @@ if (CONNECTED === false) {
 }
 // Log request
 $db->query("INSERT INTO `log` (date,ip, bot, hits) VALUES ('"
-	. $db->real_escape_string(date("Y-m-d")) 
+	. $db->real_escape_string(gmdate("Y-m-d")) 
 	. "', '" 
 	. $db->real_escape_string($_SERVER['REMOTE_ADDR']) 
 	. "', '" 
