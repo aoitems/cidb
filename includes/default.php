@@ -37,8 +37,9 @@ $smarty->assign("items", number_format(ITEMS, 0, ".", ","));
 $smarty->assign("relations", number_format(RELATIONS, 0, ".", ","));
 
 
+$earliestDate = $db->real_escape_string(gmdate("Y-m-d", time()-(3600*24*14)));
 /* 	Find top bots, by requests */
-$sql = "select sum(hits) as hits from log WHERE bot!='example'";
+$sql = "select sum(hits) as hits from log WHERE bot!='example' AND `date`>='{$earliestDate}'";
 $totalhits = $db->query($sql);
 
 $totalhits = $totalhits->fetch_assoc();
@@ -49,7 +50,11 @@ $xcache_topbots_name = md5($CONFIG['header'] . "topbots");
 if (!xcache_isset($xcache_topbots_name)) {
   $sql = "select bot as botname,
 	SUM(hits) as totalhits
-	from log WHERE bot!='example' group by botname order by totalhits desc limit 0,5";
+	from log 
+	
+	WHERE bot!='example' 
+	AND `date`>='{$earliestDate}'
+	group by botname order by totalhits desc limit 0,5";
   $result = $db->query($sql);
   while ($row = $result->fetch_assoc()) {
     $topbots[$row["botname"]] = round($row["totalhits"] / $onepercent, 2);
