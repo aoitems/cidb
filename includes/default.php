@@ -77,7 +77,9 @@ if (!xcache_isset($xcache_history_name)) {
 	}
 	
 	$js = array();
-	$js["labels"]=array_keys($results);
+	foreach ($results as $date=>$hits) {
+		$js["labels"][] = gmdate("D d.", strtotime($date));
+	}	
 	$js["datasets"]=array();
 	$d = array();	
 	$d["fillColor"] = "rgba(220, 220, 220, 0.5)";
