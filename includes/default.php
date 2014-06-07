@@ -37,15 +37,16 @@ $smarty->assign("items", number_format(ITEMS, 0, ".", ","));
 $smarty->assign("relations", number_format(RELATIONS, 0, ".", ","));
 
 
-$earliestDate = $db->real_escape_string(gmdate("Y-m-d", time()-(3600*24*14)));
+$earliestDate = $db->real_escape_string(gmdate("Y-m-d", time()-(3600*24*30)));
 /* 	Find top bots, by requests */
-$sql = "select sum(hits) as hits from log WHERE bot!='example' AND `date`>='{$earliestDate}'";
+$sql = "select sum(hits) as hits from log WHERE bot!='example' AND `date`>='{$earliestDate}' AND date!='2014-06-04'";
 $totalhits = $db->query($sql);
 
 $totalhits = $totalhits->fetch_assoc();
 $onepercent = $totalhits["hits"] / 100;
 
 $xcache_topbots_name = md5($CONFIG['header'] . "topbots");
+$xcache_history_name = md5($CONFIG['header'] . "history");
 
 if (!xcache_isset($xcache_topbots_name)) {
   $sql = "select bot as botname,
@@ -53,7 +54,7 @@ if (!xcache_isset($xcache_topbots_name)) {
 	from log 
 	
 	WHERE bot!='example' 
-	AND `date`>='{$earliestDate}'
+	AND `date`>='{$earliestDate}' AND `date`!='2014-06-04' AND `bot`!='example'
 	group by botname order by totalhits desc limit 0,5";
   $result = $db->query($sql);
   while ($row = $result->fetch_assoc()) {
@@ -65,4 +66,32 @@ else {
   $topbots = unserialize(gzinflate(xcache_get($xcache_topbots_name)));
 }
 $smarty->assign("topbots_byrequests", $topbots);
+
+
+if (!xcache_isset($xcache_history_name)) {
+	$sql = "select `date`, SUM(`hits`) AS `hits` from log WHERE `date`>='{$earliestDate}' AND `date`!='2014-06-04' AND `bot`!='example' GROUP BY `date` ORDER BY `date`";
+	$result = $db->query($sql);
+	$results=array();
+	while ($row = $result->fetch_assoc()) {
+		$results[$row["date"]] = $row["hits"];
+	}
+	
+	$js = array();
+	$js["labels"]=array_keys($results);
+	$js["datasets"]=array();
+	$d = array();	
+	$d["fillColor"] = "rgba(220, 220, 220, 0.5)";
+	$d["strokeColor"] = "rgba(220, 220, 220, 1)";
+	$d["pointColor"] = "rgba(220, 220, 220, 1)";
+	$d["pointStrokeColor"] = "#fff";
+	$d["data"]=array_values($results);	
+	$js["datasets"][] = $d;		
+	xcache_set($xcache_history_name, gzdeflate(serialize($js), 3), 600);	
+}
+else {
+	$js = unserialize(gzinflate(xcache_get($xcache_history_name)));
+}
+
+$smarty->assign("usage_graph", json_encode($js));
+
 ?>
