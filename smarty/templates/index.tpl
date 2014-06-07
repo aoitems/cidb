@@ -3,6 +3,7 @@
 	<head>
 		<title>{$title}</title>
 		<link type="text/css" href="style.css" rel="stylesheet" />
+		<script src="Chart.js"></script>
 	</head>
 	<body>
 		<center>
@@ -117,7 +118,7 @@
 		</table>
 		<br /><br />
 		<table>
-		<caption>The bots that use this CIDB the most</caption>
+		<caption>Most used by</caption>
 			<thead>
 				<tr>
 					<th>Bot</th>
@@ -131,6 +132,15 @@
 			</tr>
 		{/foreach}
 		</table>
+		<br /><b>History</b><br />
+		<canvas id="usage" width="600px" height="200px"></canvas>
 		</center>
+		
+		
+		
+		<script>
+		var lineChartData = {$usage_graph}
+		var myLine = new Chart(document.getElementById("usage").getContext("2d")).Line(lineChartData);		
+		</script>
 	</body>
 </html>
