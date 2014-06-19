@@ -2,3 +2,4 @@ syntax: glob
 config.php
 smarty/templates_c/*
 smarty/cache/*
+nbproject/*

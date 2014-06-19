@@ -38,8 +38,15 @@ $smarty->assign("relations", number_format(RELATIONS, 0, ".", ","));
 
 
 $earliestDate = $db->real_escape_string(gmdate("Y-m-d", time()-(3600*24*30)));
+$today = $db->real_escape_string(gmdate("Y-m-d", gmmktime(0,0,0)));
 /* 	Find top bots, by requests */
-$sql = "select sum(hits) as hits from log WHERE bot!='example' AND `date`>='{$earliestDate}' AND date!='2014-06-04'";
+$sql = "select sum(hits) as hits 
+	from log 
+	WHERE bot!='example' 
+	AND `date`>='{$earliestDate}' 
+	AND `date`!='2014-06-04'
+	AND `date` != '2014-06-05' 
+	AND `date`!='{$today}'";
 $totalhits = $db->query($sql);
 
 $totalhits = $totalhits->fetch_assoc();
@@ -54,7 +61,10 @@ if (!xcache_isset($xcache_topbots_name)) {
 	from log 
 	
 	WHERE bot!='example' 
-	AND `date`>='{$earliestDate}' AND `date`!='2014-06-04' AND `bot`!='example'
+	AND `date`>='{$earliestDate}' 
+	AND `date`!='2014-06-04'
+	AND `date` != '2014-06-05' 
+	AND `date`!='{$today}'
 	group by botname order by totalhits desc limit 0,5";
   $result = $db->query($sql);
   while ($row = $result->fetch_assoc()) {
