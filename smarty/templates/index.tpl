@@ -133,7 +133,7 @@
 		{/foreach}
 		</table>
 		<br /><b>History</b><br />
-		<canvas id="usage" width="600px" height="200px"></canvas>
+		<canvas id="usage" width="1000px" height="200px"></canvas>
 		</center>
 		
 		
