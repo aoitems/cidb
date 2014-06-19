@@ -140,7 +140,10 @@
 		
 		<script>
 		var lineChartData = {$usage_graph}
-		var myLine = new Chart(document.getElementById("usage").getContext("2d")).Line(lineChartData);		
+		var chart = new Chart(document.getElementById("usage").getContext("2d"));
+		var options = {$chart_options}
+			
+		var myLine = chart.Line(lineChartData, options);
 		</script>
 	</body>
 </html>

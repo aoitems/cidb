@@ -115,4 +115,11 @@ else {
 
 $smarty->assign("usage_graph", json_encode($js));
 
+$co = array();
+$co["scaleOverride"]=true;
+$co["scaleSteps"]=5;
+$co["scaleStepWidth"]=ceil(max($js["datasets"][0]["data"]) / 4);
+$co["scaleStartValue"]=0;
+$smarty->assign("chart_options", json_encode($co));
+
 ?>
