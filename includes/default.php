@@ -38,15 +38,15 @@ $smarty->assign("relations", number_format(RELATIONS, 0, ".", ","));
 
 
 $earliestDate = $db->real_escape_string(gmdate("Y-m-d", time()-(3600*24*30)));
-$today = $db->real_escape_string(gmdate("Y-m-d", gmmktime(0,0,0)));
+$today = $db->real_escape_string(gmdate("Y-m-d", time()));
 /* 	Find top bots, by requests */
 $sql = "select sum(hits) as hits 
 	from log 
 	WHERE bot!='example' 
 	AND `date`>='{$earliestDate}' 
-	AND `date`!='2014-06-04'
+	AND `date` != '2014-06-04'
 	AND `date` != '2014-06-05' 
-	AND `date`!='{$today}'";
+	AND `date` != '{$today}'";
 $totalhits = $db->query($sql);
 
 $totalhits = $totalhits->fetch_assoc();
@@ -79,7 +79,16 @@ $smarty->assign("topbots_byrequests", $topbots);
 
 
 if (!xcache_isset($xcache_history_name)) {
-	$sql = "select `date`, SUM(`hits`) AS `hits` from log WHERE `date`>='{$earliestDate}' AND `date`!='2014-06-04' AND `bot`!='example' GROUP BY `date` ORDER BY `date`";
+	$sql = "select `date`, SUM(`hits`) AS `hits` from log 
+	WHERE bot != 'example' 
+	AND `date` >= '{$earliestDate}' 
+	AND `date` != '2014-06-04'
+	AND `date` != '2014-06-05' 
+	AND `date` != '{$today}'
+	GROUP BY `date` ORDER BY `date`";
+	
+	echo "<!-- " . $sql . " -->";
+	
 	$result = $db->query($sql);
 	$results=array();
 	while ($row = $result->fetch_assoc()) {
@@ -88,7 +97,7 @@ if (!xcache_isset($xcache_history_name)) {
 	
 	$js = array();
 	foreach ($results as $date=>$hits) {
-		$js["labels"][] = gmdate("D d.", strtotime($date));
+		$js["labels"][] = gmdate("D d.", strtotime($date." GMT"));
 	}	
 	$js["datasets"]=array();
 	$d = array();	
