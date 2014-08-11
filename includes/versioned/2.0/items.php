@@ -161,7 +161,12 @@ $outarray['Results'] = $rows;
 
 if ($output == "json") {
   header('Content-Type: application/json');
-  echo json_encode($outarray);
+    if ($output=="jsonp") {
+      echo $_GET["callback"]."(".json_encode($outarray).");";
+    }
+    else {
+      echo json_encode($outarray);
+    }
   return;
 }
 

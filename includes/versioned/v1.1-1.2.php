@@ -8,7 +8,7 @@ if (!INSIDE_CMS) {
 // Output type
 $output = strip_tags(basename(strtolower($_GET['output'])));
 $template = 'legacy/output.' . $output . '.tpl';
-if (($output != "json" && !$smarty->templateExists($template))) {
+if (($output != "json" && $output!="jsonp" && !$smarty->templateExists($template))) {
   Error('Invalid "Output" value');
 }
 
@@ -130,7 +130,7 @@ if ($results > 0) {
 
 //send_cache_headers(3600*24);
 
-if ($output == "json") {
+if ($output == "json" || $output=="jsonp") {
   $outarray["revision"] = $outputversion;
   $outarray['version'] = VERSION;
   $outarray['source'] = SOURCE;
@@ -141,7 +141,12 @@ if ($output == "json") {
   $outarray['results_count'] = $results;
   $outarray['results'] = $rows;
   header('Content-Type: application/json');
-  echo json_encode($outarray);
+  if ($output=="jsonp") {
+    echo $_GET["callback"]."(".json_encode($outarray).");";
+  }
+  else {
+    echo json_encode($outarray);
+  }
   return;
 }
 

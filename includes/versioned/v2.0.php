@@ -32,7 +32,7 @@ if (!INSIDE_CMS) {
 
 // Output type
 $output = strip_tags(basename(strtolower($_GET['output'])));
-if ($output != "xml" && $output != "json") {
+if ($output != "xml" && $output != "json" && $output!="jsonp") {
   Error('Invalid "Output" value');
 }
 
