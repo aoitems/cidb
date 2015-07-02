@@ -26,8 +26,8 @@
  */
 
 if (!INSIDE_CMS) {
-  header("location: /");
-  return;
+    header("location: /");
+    return;
 }
 
 require_once('config.php');

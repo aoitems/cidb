@@ -26,7 +26,7 @@
  */
 $db = ConnectToDatabase($CONFIG);
 if (CONNECTED === false) {
-  die("Error: Couldn't connect to database");
+    die("Error: Couldn't connect to database");
 }
 $smarty->assign("maxresults", $CONFIG['real_max']);
 $smarty->assign("defaultresults", $CONFIG['default_max']);
@@ -37,7 +37,7 @@ $smarty->assign("items", number_format(ITEMS, 0, ".", ","));
 $smarty->assign("relations", number_format(RELATIONS, 0, ".", ","));
 
 
-$earliestDate = $db->real_escape_string(gmdate("Y-m-d", time()-(3600*24*30)));
+$earliestDate = $db->real_escape_string(gmdate("Y-m-d", time() - (3600 * 24 * 30)));
 $today = $db->real_escape_string(gmdate("Y-m-d", time()));
 /* 	Find top bots, by requests */
 $sql = "select sum(hits) as hits 
@@ -56,7 +56,7 @@ $xcache_topbots_name = md5($CONFIG['header'] . "topbots");
 $xcache_history_name = md5($CONFIG['header'] . "history");
 
 if (!xcache_isset($xcache_topbots_name)) {
-  $sql = "select bot as botname,
+    $sql = "select bot as botname,
 	SUM(hits) as totalhits
 	from log 
 	
@@ -66,60 +66,58 @@ if (!xcache_isset($xcache_topbots_name)) {
 	AND `date` != '2014-06-05' 
 	AND `date`!='{$today}'
 	group by botname order by totalhits desc limit 0,5";
-  $result = $db->query($sql);
-  while ($row = $result->fetch_assoc()) {
-    $topbots[$row["botname"]] = round($row["totalhits"] / $onepercent, 2);
-  }
-  xcache_set($xcache_topbots_name, gzdeflate(serialize($topbots), 3), 600);
-}
-else {
-  $topbots = unserialize(gzinflate(xcache_get($xcache_topbots_name)));
+    $result = $db->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $topbots[$row["botname"]] = round($row["totalhits"] / $onepercent, 2);
+    }
+    xcache_set($xcache_topbots_name, gzdeflate(serialize($topbots), 3), 600);
+} else {
+    $topbots = unserialize(gzinflate(xcache_get($xcache_topbots_name)));
 }
 $smarty->assign("topbots_byrequests", $topbots);
 
 
 if (!xcache_isset($xcache_history_name)) {
-	$sql = "select `date`, SUM(`hits`) AS `hits` from log 
+    $sql = "select `date`, SUM(`hits`) AS `hits` from log
 	WHERE bot != 'example' 
 	AND `date` >= '{$earliestDate}' 
 	AND `date` != '2014-06-04'
 	AND `date` != '2014-06-05' 
 	AND `date` != '{$today}'
 	GROUP BY `date` ORDER BY `date`";
-	
-	echo "<!-- " . $sql . " -->";
-	
-	$result = $db->query($sql);
-	$results=array();
-	while ($row = $result->fetch_assoc()) {
-		$results[$row["date"]] = $row["hits"];
-	}
-	
-	$js = array();
-	foreach ($results as $date=>$hits) {
-		$js["labels"][] = gmdate("D d.", strtotime($date." GMT"));
-	}	
-	$js["datasets"]=array();
-	$d = array();	
-	$d["fillColor"] = "rgba(220, 220, 220, 0.5)";
-	$d["strokeColor"] = "rgba(220, 220, 220, 1)";
-	$d["pointColor"] = "rgba(220, 220, 220, 1)";
-	$d["pointStrokeColor"] = "#fff";
-	$d["data"]=array_values($results);	
-	$js["datasets"][] = $d;		
-	xcache_set($xcache_history_name, gzdeflate(serialize($js), 3), 600);	
-}
-else {
-	$js = unserialize(gzinflate(xcache_get($xcache_history_name)));
+
+    echo "<!-- " . $sql . " -->";
+
+    $result = $db->query($sql);
+    $results = array();
+    while ($row = $result->fetch_assoc()) {
+        $results[$row["date"]] = $row["hits"];
+    }
+
+    $js = array();
+    foreach ($results as $date => $hits) {
+        $js["labels"][] = gmdate("D d.", strtotime($date . " GMT"));
+    }
+    $js["datasets"] = array();
+    $d = array();
+    $d["fillColor"] = "rgba(220, 220, 220, 0.5)";
+    $d["strokeColor"] = "rgba(220, 220, 220, 1)";
+    $d["pointColor"] = "rgba(220, 220, 220, 1)";
+    $d["pointStrokeColor"] = "#fff";
+    $d["data"] = array_values($results);
+    $js["datasets"][] = $d;
+    xcache_set($xcache_history_name, gzdeflate(serialize($js), 3), 600);
+} else {
+    $js = unserialize(gzinflate(xcache_get($xcache_history_name)));
 }
 
 $smarty->assign("usage_graph", json_encode($js));
 
 $co = array();
-$co["scaleOverride"]=true;
-$co["scaleSteps"]=5;
-$co["scaleStepWidth"]=ceil(max($js["datasets"][0]["data"]) / 4);
-$co["scaleStartValue"]=0;
+$co["scaleOverride"] = true;
+$co["scaleSteps"] = 5;
+$co["scaleStepWidth"] = ceil(max($js["datasets"][0]["data"]) / 4);
+$co["scaleStartValue"] = 0;
 $smarty->assign("chart_options", json_encode($co));
 
 ?>
