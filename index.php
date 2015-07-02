@@ -32,11 +32,11 @@ $bannedips[] = "0.0.0.0";
 
 /* * * DEFAULT PAGE ** */
 if (empty($_GET['output'])) {
-  require_once("includes/default.php");
-  $smarty->assign('header', $CONFIG['header']);
-  $smarty->assign('title', $CONFIG['title']);
-  $smarty->display('index.tpl');
-  exit();
+    require_once("includes/default.php");
+    $smarty->assign('header', $CONFIG['header']);
+    $smarty->assign('title', $CONFIG['title']);
+    $smarty->display('index.tpl');
+    exit();
 }
 
 /* * * DEFINE OUTPUT TEMPLATE ** */
@@ -44,16 +44,16 @@ $outputversion = GetOutputVersion();  // Output version
 /* * * INCLUDE RIGHT FILE FOR APPROPIATE CIDB VERSION ** */
 $workfile = "";
 switch ($outputversion) {
-  case 1.1:
-  case 1.2:
-    $workfile = "./includes/versioned/v1.1-1.2.php";
-    break;
-  case 2.0:
-    $workfile = "./includes/versioned/v2.0.php";
-    break;
-  default:
-    Error('Unsupported output version!');
-    break;
+    case 1.1:
+    case 1.2:
+        $workfile = "./includes/versioned/v1.1-1.2.php";
+        break;
+    case 2.0:
+        $workfile = "./includes/versioned/v2.0.php";
+        break;
+    default:
+        Error('Unsupported output version!');
+        break;
 }
 
 require_once($workfile);
