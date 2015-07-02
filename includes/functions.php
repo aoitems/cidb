@@ -170,11 +170,15 @@ function GenerateSqlQueryBase($db, $data)
         if (substr($word, 0, 1) != "-") {
             $likestring[] = $word;
             $matchstring[] = "+" . $word;
+        } else if (substr($word, 0, 1) == '-' && strlen($word) == 1) {
+            $likestring[] = $word;
         } else {
             $notlikestring[] = substr($word, 1);
         }
     }
-    $likestring = implode("%", $likestring);
+
+    $firstlikeword = array_shift($likestring);
+    //$likestring = implode("%", $likestring);
     $matchstring = implode(" ", $matchstring);
 
 
@@ -182,12 +186,19 @@ function GenerateSqlQueryBase($db, $data)
     $sql["select"] = " SELECT t1.lowid, t1.highid, t2.ql as lowql, t3.ql as highql, t2.name as lowname, t3.name as highname, t2.icon, t2.itemtype, t2.slot, t2.defaultpos, " .
         "MATCH(t2.name) AGAINST ('" . $db->real_escape_string($matchstring) . "') as Relevance ";
     $sql["from"] = " FROM item_relations t1 LEFT JOIN (items t2, items t3) ON (t1.lowid = t2.aoid AND t1.highid = t3.aoid) ";
-    $sql["where"] = " WHERE ((t2.name LIKE '%" . $db->real_escape_string($likestring) . "%' ";
+    $sql["where"] = " WHERE ((t2.name LIKE '%" . $db->real_escape_string($firstlikeword) . "%' ";
+    foreach ($likestring as $like){
+        $sql["where"] .= " AND t2.name LIKE '%" . $db->real_escape_string($like) . "%' ";
+    }
     foreach ($notlikestring as $notlike) {
         $sql["where"] .= " AND t2.name NOT LIKE '%" . $db->real_escape_string($notlike) . "%' ";
     }
     $sql["where"] .= ") ";
-    $sql["where"] .= " OR (t3.name LIKE '%" . $db->real_escape_string($likestring) . "%' ";
+
+    $sql["where"] .= " OR (t3.name LIKE '%" . $db->real_escape_string($firstlikeword) . "%' ";
+    foreach ($likestring as $like) {
+        $sql["where"] .= " AND t3.name LIKE '%" . $db->real_escape_string($like) . "%' ";
+    }
     foreach ($notlikestring as $notlike) {
         $sql["where"] .= " AND t3.name NOT LIKE '%" . $db->real_escape_string($notlike) . "%' ";
     }
